@@ -1,4 +1,4 @@
-package com.clebsonsantos.backend;
+package com.clebsonsantos.backend.job;
 
 import java.math.BigDecimal;
 
@@ -22,6 +22,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.transaction.PlatformTransactionManager;
+
+import com.clebsonsantos.backend.domain.Transaction;
+import com.clebsonsantos.backend.domain.TransactionCNAB;
 
 @Configuration
 public class BatchConfig {
@@ -70,12 +73,11 @@ public class BatchConfig {
     return item -> {
       var transaction = new Transaction(
           null, item.type(), null,
-          null,
+          item.amount().divide(BigDecimal.valueOf(100)),
           item.cpf(), item.card(), null,
           item.storeOwner().trim(), item.storeName().trim())
           .withData(item.date())
-          .withHora(item.hour())
-          .withValor(item.amount().divide(BigDecimal.valueOf(100)));
+          .withHora(item.hour());
 
       return transaction;
     };

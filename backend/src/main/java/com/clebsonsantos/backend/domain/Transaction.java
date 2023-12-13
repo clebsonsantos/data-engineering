@@ -1,4 +1,4 @@
-package com.clebsonsantos.backend;
+package com.clebsonsantos.backend.domain;
 
 import java.math.BigDecimal;
 import java.sql.Date;
@@ -16,12 +16,6 @@ public record Transaction(
     Time hour,
     String storeOwner,
     String storeName) {
-
-  public Transaction withValor(BigDecimal amount) {
-    return new Transaction(
-        id, type, date, amount, cpf,
-        card, hour, storeOwner, storeName);
-  }
 
   public Transaction withData(String date) throws ParseException {
     var dateFormat = new SimpleDateFormat("yyyyMMdd");
