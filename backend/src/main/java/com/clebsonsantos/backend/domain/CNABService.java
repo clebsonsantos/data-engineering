@@ -33,7 +33,7 @@ public class CNABService {
 
     var jobParameters = new JobParametersBuilder()
         .addJobParameter("cnab", file.getOriginalFilename(), String.class, true)
-        .addJobParameter("cnbaFile", "file:" + targetLocation.toString(), String.class)
+        .addJobParameter("cnabFile", "file:" + targetLocation.toString(), String.class, false)
         .toJobParameters();
 
     jobLauncher.run(job, jobParameters);
