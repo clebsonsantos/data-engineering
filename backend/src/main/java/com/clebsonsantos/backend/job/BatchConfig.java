@@ -28,7 +28,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
-import com.clebsonsantos.backend.entity.Transaction;
+import com.clebsonsantos.backend.entity.Transactions;
 import com.clebsonsantos.backend.entity.TransactionCNAB;
 
 @Configuration
@@ -50,10 +50,10 @@ public class BatchConfig {
   }
 
   @Bean
-  Step step(ItemReader<TransactionCNAB> reader, ItemProcessor<TransactionCNAB, Transaction> processor,
-      ItemWriter<Transaction> writer) {
+  Step step(ItemReader<TransactionCNAB> reader, ItemProcessor<TransactionCNAB, Transactions> processor,
+      ItemWriter<Transactions> writer) {
     return new StepBuilder("step", this.jobRepository)
-        .<TransactionCNAB, Transaction>chunk(1000, this.transactionManager)
+        .<TransactionCNAB, Transactions>chunk(1000, this.transactionManager)
         .reader(reader)
         .processor(processor)
         .writer(writer)
@@ -70,37 +70,37 @@ public class BatchConfig {
         .fixedLength()
         .columns(new Range(1, 1), new Range(2, 9), new Range(10, 19), new Range(20, 30),
             new Range(31, 42), new Range(43, 48), new Range(49, 62), new Range(63, 80))
-        .names("type", "date", "amount", "cpf", "card", "hour", "storeOwner", "storeName")
+        .names("type", "createdAt", "amount", "cpf", "card", "dateHour", "storeOwner", "storeName")
         .targetType(TransactionCNAB.class)
         .build();
   }
 
   @Bean
-  ItemProcessor<TransactionCNAB, Transaction> processor() {
+  ItemProcessor<TransactionCNAB, Transactions> processor() {
     return item -> {
-      var transaction = new Transaction(
+      var transaction = new Transactions(
           null, item.type(), null,
           item.amount().divide(BigDecimal.valueOf(100)),
           item.cpf(), item.card(), null,
           item.storeOwner().trim(), item.storeName().trim())
-          .withData(item.date())
-          .withHora(item.hour());
+          .withData(item.createdAt())
+          .withHora(item.dateHour());
 
       return transaction;
     };
   }
 
   @Bean
-  JdbcBatchItemWriter<Transaction> writer(DataSource dataSource) {
-    return new JdbcBatchItemWriterBuilder<Transaction>()
+  JdbcBatchItemWriter<Transactions> writer(DataSource dataSource) {
+    return new JdbcBatchItemWriterBuilder<Transactions>()
         .dataSource(dataSource)
         .sql("""
               INSERT INTO transactions (
-                type, "date", amount, cpf, card,
-                "hour", store_owner, store_name
+                type, created_at, amount, cpf, card,
+                date_hour, store_owner, store_name
               ) VALUES (
-                :type, :date, :amount, :cpf, :card,
-                :hour, :storeOwner, :storeName
+                :type, :createdAt, :amount, :cpf, :card,
+                :dateHour, :storeOwner, :storeName
               )
             """)
         .beanMapped()

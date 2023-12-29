@@ -4,11 +4,11 @@ import java.math.BigDecimal;
 
 public record TransactionCNAB(
 		Integer type,
-		String date,
+		String createdAt,
 		BigDecimal amount,
 		Long cpf,
 		String card,
-		String hour,
+		String dateHour,
 		String storeOwner,
 		String storeName) {
 
