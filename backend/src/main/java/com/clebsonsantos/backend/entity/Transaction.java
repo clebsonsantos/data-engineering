@@ -1,4 +1,4 @@
-package com.clebsonsantos.backend.domain;
+package com.clebsonsantos.backend.entity;
 
 import java.math.BigDecimal;
 import java.sql.Date;
