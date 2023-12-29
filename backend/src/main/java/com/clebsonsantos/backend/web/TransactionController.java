@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import com.clebsonsantos.backend.entity.TransactionReport;
@@ -20,6 +21,7 @@ public class TransactionController {
   }
 
   @GetMapping()
+  @CrossOrigin()
   public List<TransactionReport> listAll() {
     return this.transactionService.getTotalsTransactionsByStoreName();
   }

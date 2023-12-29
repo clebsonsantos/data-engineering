@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.clebsonsantos.backend.service.CNABService;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
@@ -20,6 +21,7 @@ public class CNABController {
   }
 
   @PostMapping("upload")
+  @CrossOrigin()
   public String upload(@RequestParam("file") MultipartFile file) throws Exception {
     this.service.uploadCNABFile(file);
     return "Proccess started in background!";
