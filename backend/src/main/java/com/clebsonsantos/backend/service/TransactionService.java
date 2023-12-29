@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.clebsonsantos.backend.entity.TransactionReport;
-import com.clebsonsantos.backend.entity.TypeTransaction;
 import com.clebsonsantos.backend.repository.TransactionRepository;
 
 @Service
@@ -25,8 +24,7 @@ public class TransactionService {
 
     transactions.forEach(transaction -> {
       var storeName = transaction.storeName();
-      var typeTransaction = TypeTransaction.findByType(transaction.type());
-      var amount = transaction.amount().multiply(typeTransaction.getSignal());
+      var amount = transaction.amount();
 
       reportMap.compute(storeName, (key, existing) -> {
         var report = (existing != null) ? existing : new TransactionReport(key, BigDecimal.ZERO, new ArrayList<>());

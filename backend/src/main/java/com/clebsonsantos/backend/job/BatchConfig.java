@@ -29,6 +29,7 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.transaction.PlatformTransactionManager;
 
 import com.clebsonsantos.backend.entity.Transactions;
+import com.clebsonsantos.backend.entity.TypeTransaction;
 import com.clebsonsantos.backend.entity.TransactionCNAB;
 
 @Configuration
@@ -78,9 +79,12 @@ public class BatchConfig {
   @Bean
   ItemProcessor<TransactionCNAB, Transactions> processor() {
     return item -> {
+      var typeTransaction = TypeTransaction.findByType(item.type());
+      var newAmount = item.amount().divide(new BigDecimal(100)).multiply(typeTransaction.getSignal());
+
       var transaction = new Transactions(
           null, item.type(), null,
-          item.amount().divide(BigDecimal.valueOf(100)),
+          newAmount,
           item.cpf(), item.card(), null,
           item.storeOwner().trim(), item.storeName().trim())
           .withData(item.createdAt())
