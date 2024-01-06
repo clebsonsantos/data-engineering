@@ -12,13 +12,13 @@ import org.springframework.data.relational.core.mapping.Column;
 public record Transactions(
     @Id Long id,
     Integer type,
-    @Column("CREATED_AT") Date createdAt,
+    @Column("created_at") Date createdAt,
     BigDecimal amount,
     Long cpf,
     String card,
-    @Column("DATE_HOUR") Time dateHour,
-    @Column("STORE_OWNER") String storeOwner,
-    @Column("STORE_NAME") String storeName) {
+    @Column("date_hour") Time dateHour,
+    @Column("store_owner") String storeOwner,
+    @Column("store_name") String storeName) {
 
   public Transactions withData(String date) throws ParseException {
     var dateFormat = new SimpleDateFormat("yyyyMMdd");
